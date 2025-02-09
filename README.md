@@ -33,9 +33,10 @@ To get started with this project, follow the instructions below to set up your l
 ## Technologies Used
 
 - **Frontend**: Next.js, React
-- **Backend**: Firebase Functions, Firestore, Firebase Storage
+- **Backend**: Firebase Functions, Firestore, Firebase Storage, Google Cloud
 - **Styling**: CSS Modules
 - **Video Processing**: Fluent FFmpeg
+- **Others**: Docker
 
 ## Setup
 
