@@ -9,6 +9,7 @@ import {
   convertVideo,
   setupDirectories
 } from './storage';
+import { isVideoNew,setVideo, getVideo } from './firestore';
 
 // Create the local directories for videos
 setupDirectories();
@@ -34,6 +35,15 @@ app.post('/process-video', async (req, res) => {
 
   const inputFileName = data.name;
   const outputFileName = `processed-${inputFileName}`;
+  const videoId = inputFileName.split('.')[0];
+
+  if(!isVideoNew(videoId)){
+    const videoData = await getVideo(videoId);
+    await setVideo(videoId, {
+      ...videoData,
+      status: 'processing'
+    });
+  }
 
   // Download the raw video from Cloud Storage
   await downloadRawVideo(inputFileName);
@@ -51,6 +61,11 @@ app.post('/process-video', async (req, res) => {
   
   // Upload the processed video to Cloud Storage
   await uploadProcessedVideo(outputFileName);
+
+  await setVideo(videoId, {
+    status: 'processed',
+    filename: outputFileName
+  }, { merge: true });
 
   await Promise.all([
     deleteRawVideo(inputFileName),

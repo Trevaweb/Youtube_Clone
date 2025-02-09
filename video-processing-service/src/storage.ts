@@ -27,17 +27,52 @@ export function setupDirectories() {
  */
 export function convertVideo(rawVideoName: string, processedVideoName: string) {
   return new Promise<void>((resolve, reject) => {
-    ffmpeg(`${localRawVideoPath}/${rawVideoName}`)
-      .outputOptions("-vf", "scale=-1:360") // 360p
+    const inputPath = `${localRawVideoPath}/${rawVideoName}`;
+    const outputPath = `${localProcessedVideoPath}/${processedVideoName}`;
+    
+    console.log("Starting conversion:", {
+      inputPath,
+      outputPath,
+      exists: fs.existsSync(inputPath),
+      size: fs.existsSync(inputPath) ? fs.statSync(inputPath).size : 0
+    });
+
+    if (!fs.existsSync(inputPath)) {
+      reject(new Error(`Input file not found: ${inputPath}`));
+      return;
+    }
+
+    ffmpeg(inputPath)
+      .outputOptions("-vf", "scale=512:-1") //lower resolution
+      .outputOptions("-preset", "veryslow")
+      .outputOptions("-c:a", "copy") // Copy audio without re-encoding
+      .outputOptions("-movflags", "+faststart") // Enable streaming 
+      .outputOptions("-format", "yuv420p")
+      .on("start", function(commandLine) {
+        console.log("FFmpeg command:", commandLine);
+      })
+      .on("stderr", function(stderrLine) {
+        console.log("FFmpeg stderr:", stderrLine);
+      })
+      .on("error", function (err: any) {
+        console.error("FFmpeg error:", {
+          message: err.message,
+          stack: err.stack,
+          input: inputPath,
+          output: outputPath,
+          code: err.code,
+          failedCommand: err.failedCommand
+        });
+        reject(err);
+      })
+      .on("progress", function(progress) {
+        console.log(`Processing: ${progress.percent}% done`);
+      })
       .on("end", function () {
         console.log("Processing finished successfully");
         resolve();
       })
-      .on("error", function (err: any) {
-        console.log("An error occurred: " + err.message);
-        reject(err);
-      })
-      .save(`${localProcessedVideoPath}/${processedVideoName}`);
+      .save(outputPath);
   });
 }
 
