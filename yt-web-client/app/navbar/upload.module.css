@@ -1,0 +1,94 @@
+.uploadContainer {
+  display: inline-block;
+}
+
+.uploadInput {
+  display: none;
+}
+
+.uploadButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 0.4em;
+}
+
+.uploadButton:hover {
+  background-color: rgb(230, 230, 230);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+}
+
+.modalContent h2 {
+  margin-bottom: 20px;
+}
+
+.textInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+textarea.textInput {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancelButton, .submitButton {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancelButton {
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+}
+
+.submitButton {
+  background: #065fd4;
+  color: white;
+  border: none;
+}
+
+.submitButton:hover {
+  background: #0056bf;
+}
+  
